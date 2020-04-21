@@ -6,11 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.work.Constraints
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.example.myapplication.R
 import kotlinx.android.synthetic.main.fragment_work_manager.*
+import java.util.concurrent.TimeUnit
 
 /**
  * A simple [Fragment] subclass.
@@ -35,6 +34,7 @@ class WorkManagerFragment : Fragment() {
                 .build()
 
             val uploadWorkRequest = OneTimeWorkRequestBuilder<SimpleWorker>().setConstraints(constraints)
+                .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
                 .build()
             WorkManager.getInstance(this!!.context!!).enqueue(uploadWorkRequest)
         }
