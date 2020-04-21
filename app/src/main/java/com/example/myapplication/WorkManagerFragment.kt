@@ -38,6 +38,7 @@ class WorkManagerFragment : Fragment() {
             val uploadWorkRequest = OneTimeWorkRequestBuilder<SimpleWorker>().setConstraints(constraints)
                 .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
                 .setInputData(data)
+                .addTag(SIMPLE_TAG)
                 .build()
             WorkManager.getInstance(this!!.context!!).enqueue(uploadWorkRequest)
         }
@@ -45,6 +46,7 @@ class WorkManagerFragment : Fragment() {
 
     companion object {
         const val USER_NAME = "username"
+        const val SIMPLE_TAG = "simple_tag"
     }
 
 }
