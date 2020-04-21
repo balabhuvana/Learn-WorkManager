@@ -33,11 +33,18 @@ class WorkManagerFragment : Fragment() {
                 .setRequiresCharging(false)
                 .build()
 
+            val data = workDataOf(USER_NAME to "Arunkumar")
+
             val uploadWorkRequest = OneTimeWorkRequestBuilder<SimpleWorker>().setConstraints(constraints)
                 .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)
+                .setInputData(data)
                 .build()
             WorkManager.getInstance(this!!.context!!).enqueue(uploadWorkRequest)
         }
+    }
+
+    companion object {
+        const val USER_NAME = "username"
     }
 
 }
