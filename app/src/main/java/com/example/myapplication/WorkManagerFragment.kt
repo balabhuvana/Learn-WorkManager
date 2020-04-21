@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.work.Constraints
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.myapplication.R
@@ -28,7 +29,12 @@ class WorkManagerFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         btnStartOneTimeRequest.setOnClickListener {
-            val uploadWorkRequest = OneTimeWorkRequestBuilder<SimpleWorker>()
+
+            val constraints = Constraints.Builder().setRequiresBatteryNotLow(true)
+                .setRequiresCharging(false)
+                .build()
+
+            val uploadWorkRequest = OneTimeWorkRequestBuilder<SimpleWorker>().setConstraints(constraints)
                 .build()
             WorkManager.getInstance(this!!.context!!).enqueue(uploadWorkRequest)
         }
