@@ -20,7 +20,7 @@ class SimpleWorker(appContext: Context, workerParameters: WorkerParameters) :
     }
 
     companion object {
-        val TAG = SimpleWorker.javaClass.simpleName
+        val TAG = SimpleWorker::class.java.simpleName
     }
 
 }

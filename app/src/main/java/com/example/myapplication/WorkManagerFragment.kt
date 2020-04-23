@@ -3,14 +3,14 @@ package com.example.workmanager
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.work.*
 import com.example.myapplication.R
-import com.example.myapplication.worker.ProgressWorker
+import com.example.myapplication.worker.*
 import com.example.myapplication.worker.ProgressWorker.Companion.Progress
 import kotlinx.android.synthetic.main.fragment_work_manager.*
 import java.util.concurrent.TimeUnit
@@ -20,8 +20,8 @@ import java.util.concurrent.TimeUnit
  */
 class WorkManagerFragment : Fragment() {
 
-    lateinit var uploadWorkRequest: OneTimeWorkRequest;
-    lateinit var progressWorkRequest: OneTimeWorkRequest;
+    lateinit var uploadWorkRequest: OneTimeWorkRequest
+    lateinit var progressWorkRequest: OneTimeWorkRequest
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +47,7 @@ class WorkManagerFragment : Fragment() {
                 .setInputData(data)
                 .addTag(SIMPLE_TAG)
                 .build()
-            WorkManager.getInstance(this!!.context!!).enqueue(uploadWorkRequest)
+            WorkManager.getInstance(this.context!!).enqueue(uploadWorkRequest)
 
             observeSimpleWorkStatus()
         }
@@ -55,9 +55,9 @@ class WorkManagerFragment : Fragment() {
         btnProgressWorker.setOnClickListener {
             progressWorkRequest = OneTimeWorkRequestBuilder<ProgressWorker>()
                 .build()
-            WorkManager.getInstance(this!!.context!!).enqueue(progressWorkRequest)
+            WorkManager.getInstance(this.context!!).enqueue(progressWorkRequest)
 
-            WorkManager.getInstance(this!!.context!!).getWorkInfoByIdLiveData(progressWorkRequest.id)
+            WorkManager.getInstance(this.context!!).getWorkInfoByIdLiveData(progressWorkRequest.id)
                 .observe(viewLifecycleOwner,
                     Observer { workInfo: WorkInfo? ->
                         if (workInfo != null) {
@@ -66,10 +66,37 @@ class WorkManagerFragment : Fragment() {
                         }
                     })
         }
+
+        btnChainWorker.setOnClickListener {
+            val workerOne: OneTimeWorkRequest = OneTimeWorkRequestBuilder<WorkerOne>().addTag(CHAIN_TAG)
+                .build()
+            val workerTwo: OneTimeWorkRequest = OneTimeWorkRequestBuilder<WorkerTwo>().addTag(CHAIN_TAG)
+                .build()
+            val workerThree: OneTimeWorkRequest = OneTimeWorkRequestBuilder<WorkerThree>().addTag(CHAIN_TAG)
+                .build()
+
+            val dependantWork: OneTimeWorkRequest = OneTimeWorkRequestBuilder<DependantWork>().addTag(CHAIN_TAG)
+                .build()
+
+            WorkManager.getInstance(this.context!!).beginWith(mutableListOf(workerOne, workerTwo, workerThree))
+                .then(dependantWork)
+                .enqueue()
+
+            WorkManager.getInstance(this.context!!).getWorkInfoByIdLiveData(dependantWork.id)
+                .observe(viewLifecycleOwner,
+                    Observer {
+                        if (it != null) {
+                            if (it.state == WorkInfo.State.SUCCEEDED) {
+                                val finalData = it.outputData.getInt(DependantWork.DependantWork, 0)
+                                Log.i(TAG, "Combined Vale : $finalData")
+                            }
+                        }
+                    })
+        }
     }
 
     fun observeSimpleWorkStatus() {
-        WorkManager.getInstance(this!!.context!!).getWorkInfoByIdLiveData(uploadWorkRequest.id)
+        WorkManager.getInstance(this.context!!).getWorkInfoByIdLiveData(uploadWorkRequest.id)
             .observe(viewLifecycleOwner,
                 Observer { workInfo ->
                     if (workInfo != null) {
@@ -89,6 +116,7 @@ class WorkManagerFragment : Fragment() {
     companion object {
         const val USER_NAME = "username"
         const val SIMPLE_TAG = "simple_tag"
+        const val CHAIN_TAG = "chain_tag"
         val TAG = WorkManagerFragment::class.java.simpleName
     }
 
