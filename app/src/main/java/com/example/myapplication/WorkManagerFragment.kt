@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.work.*
 import com.example.myapplication.R
+import com.example.myapplication.worker.ProgressWorker
+import com.example.myapplication.worker.ProgressWorker.Companion.Progress
 import kotlinx.android.synthetic.main.fragment_work_manager.*
 import java.util.concurrent.TimeUnit
 
@@ -19,6 +21,7 @@ import java.util.concurrent.TimeUnit
 class WorkManagerFragment : Fragment() {
 
     lateinit var uploadWorkRequest: OneTimeWorkRequest;
+    lateinit var progressWorkRequest: OneTimeWorkRequest;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +50,21 @@ class WorkManagerFragment : Fragment() {
             WorkManager.getInstance(this!!.context!!).enqueue(uploadWorkRequest)
 
             observeSimpleWorkStatus()
+        }
+
+        btnProgressWorker.setOnClickListener {
+            progressWorkRequest = OneTimeWorkRequestBuilder<ProgressWorker>()
+                .build()
+            WorkManager.getInstance(this!!.context!!).enqueue(progressWorkRequest)
+
+            WorkManager.getInstance(this!!.context!!).getWorkInfoByIdLiveData(progressWorkRequest.id)
+                .observe(viewLifecycleOwner,
+                    Observer { workInfo: WorkInfo? ->
+                        if (workInfo != null) {
+                            val progressValue = workInfo.progress.getInt(Progress, 20)
+                            Log.i(TAG, "Sorry Dude $progressValue")
+                        }
+                    })
         }
     }
 
