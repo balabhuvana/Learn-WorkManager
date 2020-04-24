@@ -3,4 +3,5 @@
     <string name="startOneTimeRequest">OneTimeWorkRequest</string>
     <string name="progress_worker">ProgressWorker</string>
     <string name="chain_work">Chain Work</string>
+    <string name="stop_work">Stop Work</string>
 </resources>
