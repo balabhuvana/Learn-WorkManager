@@ -13,6 +13,6 @@ class WorkerThree(context: Context, workerParameters: WorkerParameters) : Worker
     }
 
     companion object {
-        val WORKER_THREE = "worker_three"
+        const val WORKER_THREE = "worker_three"
     }
 }

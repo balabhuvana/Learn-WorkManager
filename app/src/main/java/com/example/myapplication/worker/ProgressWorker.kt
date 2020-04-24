@@ -18,7 +18,6 @@ class ProgressWorker(context: Context, workerParameters: WorkerParameters) :
     }
 
     companion object {
-        const val PROGRESS_DATA = "progress_data"
         const val Progress = "Progress"
         private const val delayDuration = 30L
     }

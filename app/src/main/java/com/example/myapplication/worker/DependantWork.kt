@@ -16,6 +16,6 @@ class DependantWork(context: Context, workerParameters: WorkerParameters) : Work
     }
 
     companion object {
-        val DependantWork = "dependant_work"
+        const val DependantWork = "dependant_work"
     }
 }

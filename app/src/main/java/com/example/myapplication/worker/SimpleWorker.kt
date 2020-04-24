@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.example.myapplication.fragment.WorkManagerFragment
 
 class SimpleWorker(appContext: Context, workerParameters: WorkerParameters) :
     Worker(appContext, workerParameters) {

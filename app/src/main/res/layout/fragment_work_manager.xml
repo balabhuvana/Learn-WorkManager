@@ -33,4 +33,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnProgressWorker"/>
 
+    <Button
+            android:id="@+id/btnStopWorker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stop_work"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnChainWorker"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
