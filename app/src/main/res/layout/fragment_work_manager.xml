@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent">
 
@@ -34,12 +33,21 @@
             app:layout_constraintTop_toBottomOf="@+id/btnProgressWorker"/>
 
     <Button
+            android:id="@+id/btnStartWorker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_work"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnChainWorker"/>
+
+    <Button
             android:id="@+id/btnStopWorker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/stop_work"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnChainWorker"/>
+            app:layout_constraintTop_toBottomOf="@+id/btnStartWorker"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

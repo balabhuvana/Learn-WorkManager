@@ -23,6 +23,7 @@ class WorkManagerFragment : Fragment() {
 
     private lateinit var uploadWorkRequest: OneTimeWorkRequest
     private lateinit var progressWorkRequest: OneTimeWorkRequest
+    private lateinit var startWorker: OneTimeWorkRequest
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,9 +48,28 @@ class WorkManagerFragment : Fragment() {
             chainWorker()
         }
 
-        btnStopWorker.setOnClickListener {
-
+        btnStartWorker.setOnClickListener {
+            startWorker()
         }
+
+        btnStopWorker.setOnClickListener {
+            stopWorker()
+        }
+    }
+
+
+    private fun startWorker() {
+        startWorker = OneTimeWorkRequestBuilder<StartWorker>().addTag("start_worker").build()
+        WorkManager.getInstance(this.context!!).enqueue(startWorker)
+
+        WorkManager.getInstance(this.context!!).getWorkInfoByIdLiveData(startWorker.id).observe(viewLifecycleOwner,
+            Observer {
+                Log.i(TAG, "-----> Worker State: $it.state")
+            })
+    }
+
+    private fun stopWorker() {
+        WorkManager.getInstance(this.context!!).cancelWorkById(startWorker.id)
     }
 
     private fun workerWithConstraints() {
