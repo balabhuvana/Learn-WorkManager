@@ -55,8 +55,22 @@ class WorkManagerFragment : Fragment() {
         btnStopWorker.setOnClickListener {
             stopWorker()
         }
+
+        btnRepeatedWorker.setOnClickListener {
+            repeatedWork()
+        }
     }
 
+    private fun repeatedWork() {
+
+        val saveRequest: PeriodicWorkRequest =
+            PeriodicWorkRequestBuilder<RepeatedWork>(1, TimeUnit.HOURS)
+                .setConstraints(Constraints.NONE)
+                .build()
+
+        WorkManager.getInstance(this.context!!)
+            .enqueueUniquePeriodicWork("repeated_work", ExistingPeriodicWorkPolicy.KEEP, saveRequest)
+    }
 
     private fun startWorker() {
         startWorker = OneTimeWorkRequestBuilder<StartWorker>().addTag("start_worker").build()
